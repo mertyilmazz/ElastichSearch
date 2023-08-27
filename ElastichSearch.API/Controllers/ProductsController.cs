@@ -7,7 +7,7 @@ namespace ElastichSearch.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseController
     {
 
         private readonly ProductService _productService;
@@ -22,7 +22,7 @@ namespace ElastichSearch.API.Controllers
         public async Task<IActionResult> Save(ProductCreateDto request)
         {
             var result = await _productService.SaveAsync(request);
-            return Ok(result);
+            return CreateActionResult(result);
         }
     }
 }
