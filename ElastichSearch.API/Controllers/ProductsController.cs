@@ -24,5 +24,34 @@ namespace ElastichSearch.API.Controllers
             var result = await _productService.SaveAsync(request);
             return CreateActionResult(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _productService.GetAllAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAll(string id)
+        {
+            var result = await _productService.GetById(id);
+            return Ok(result);
+        }
+
+        [HttpPut()]
+        public async Task<IActionResult> Update(ProductUpdateDto req)
+        {
+            var result = await _productService.UpdateAsync(req);
+            return CreateActionResult(result);
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _productService.DeleteAsync(id);
+            return CreateActionResult(result);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.OpenApi.Writers;
+using System.Net;
 
 namespace ElastichSearch.API.DTOs
 {
@@ -19,5 +20,12 @@ namespace ElastichSearch.API.DTOs
         {
             return new ResponseDto<T> { Errors = errors, StatusCode = httpStatusCode };
         }
+
+        public static ResponseDto<T> Fail(string error, HttpStatusCode httpStatusCode)
+        {
+            return new ResponseDto<T> { Errors = new List<string> { error}, StatusCode = httpStatusCode };
+        }
+
+
     }
 }
