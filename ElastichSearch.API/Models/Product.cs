@@ -1,12 +1,11 @@
 ﻿using ElastichSearch.API.DTOs;
-using Nest;
+
 
 namespace ElastichSearch.API.Models
 {
     public class Product
     {
-
-        [PropertyName("_id")]
+   
         public string Id { get; set; } = null!;
 
         public string Name { get; set; } = null!;
@@ -20,7 +19,6 @@ namespace ElastichSearch.API.Models
         public DateTime? Updated { get; set; }
 
         public ProductFeature? Feature { get; set; }
-
 
         public ProductDto CreateDto()
         {

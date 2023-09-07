@@ -1,17 +1,17 @@
-﻿using ElastichSearch.API.DTOs;
+﻿using Elastic.Clients.Elasticsearch;
+using ElastichSearch.API.DTOs;
 using ElastichSearch.API.Models;
-using Nest;
 using System.Collections.Immutable;
 
 namespace ElastichSearch.API.Repositories
 {
     public class ProductRepository
     {
-        private readonly ElasticClient _elastichClient;
+        private readonly ElasticsearchClient _elastichClient;
         private const string indexName = "products";
 
 
-        public ProductRepository(ElasticClient elastichClient)
+        public ProductRepository(ElasticsearchClient elastichClient)
         {
             _elastichClient = elastichClient;
         }
@@ -22,7 +22,7 @@ namespace ElastichSearch.API.Repositories
 
             var response = await _elastichClient.IndexAsync(newProduct, x => x.Index(indexName).Id(Guid.NewGuid().ToString()));
 
-            if (!response.IsValid) return null;
+            if (!response.IsSuccess()) return null;
 
             newProduct.Id = response.Id;
 
@@ -54,10 +54,11 @@ namespace ElastichSearch.API.Repositories
 
         public async Task<bool> UpdateAsync(ProductUpdateDto productUpdateDto)
         {
-            var response = await _elastichClient.UpdateAsync<Product, ProductUpdateDto>(productUpdateDto.id,
-                x => x.Index(indexName).Doc(productUpdateDto));
+            //var response = await _elastichClient.UpdateAsync<Product, ProductUpdateDto>(productUpdateDto.id,
+            //    x => x.Index(indexName).Doc(productUpdateDto));
 
-            return response.IsValid;
+            var response = await _elastichClient.UpdateAsync<Product, ProductUpdateDto>(indexName, productUpdateDto.id, x => x.Doc(productUpdateDto));
+            return response.IsSuccess();
         }
 
 

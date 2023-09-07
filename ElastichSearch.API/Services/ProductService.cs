@@ -1,4 +1,5 @@
-﻿using ElastichSearch.API.DTOs;
+﻿using Elastic.Clients.Elasticsearch;
+using ElastichSearch.API.DTOs;
 using ElastichSearch.API.Models;
 using ElastichSearch.API.Repositories;
 using System.Collections.Immutable;
@@ -63,16 +64,17 @@ namespace ElastichSearch.API.Services
         public async Task<ResponseDto<bool>> DeleteAsync(string id)
         {
             var deleteResponse = await _productRepository.DeleteAsync(id);
-            if (!deleteResponse.IsValid && deleteResponse.Result == Nest.Result.NotFound)
+            if (!deleteResponse.IsValidResponse && deleteResponse.Result == Result.NotFound)
                 return ResponseDto<bool>.Fail("Data not found", System.Net.HttpStatusCode.NotFound);
 
-            if (!deleteResponse.IsValid)
+            if (!deleteResponse.IsValidResponse)
             {
-                _logger.LogError(deleteResponse.OriginalException, deleteResponse.ServerError.ToString());
+                deleteResponse.TryGetOriginalException(out Exception? exception);
+                _logger.LogError(exception, deleteResponse.ElasticsearchServerError.ToString());
                 return ResponseDto<bool>.Fail("An error occurred while deleting data", System.Net.HttpStatusCode.NotFound);
             }
 
-            return ResponseDto<bool>.Success(deleteResponse.IsValid, System.Net.HttpStatusCode.OK);
+            return ResponseDto<bool>.Success(deleteResponse.IsValidResponse, System.Net.HttpStatusCode.OK);
         }
     }
 }
