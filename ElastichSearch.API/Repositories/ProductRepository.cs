@@ -61,10 +61,10 @@ namespace ElastichSearch.API.Repositories
         }
 
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<DeleteResponse> DeleteAsync(string id)
         {
             var response = await _elastichClient.DeleteAsync<Product>(id, x => x.Index(indexName));
-            return response.IsValid;
+            return response;
         }
     }
 }

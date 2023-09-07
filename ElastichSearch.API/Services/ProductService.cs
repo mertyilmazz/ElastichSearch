@@ -8,10 +8,12 @@ namespace ElastichSearch.API.Services
     public class ProductService
     {
         private readonly ProductRepository _productRepository;
+        private readonly ILogger<ProductService> _logger;
 
-        public ProductService(ProductRepository productRepository)
+        public ProductService(ProductRepository productRepository, ILogger<ProductService> logger)
         {
             _productRepository = productRepository;
+            _logger = logger;
         }
 
         public async Task<ResponseDto<ProductDto>> SaveAsync(ProductCreateDto productCreateDto)
@@ -56,14 +58,21 @@ namespace ElastichSearch.API.Services
             return ResponseDto<bool>.Success(response, System.Net.HttpStatusCode.OK);
         }
 
+
+        //example for logging and using Elastic results
         public async Task<ResponseDto<bool>> DeleteAsync(string id)
         {
-            var response = await _productRepository.DeleteAsync(id);
+            var deleteResponse = await _productRepository.DeleteAsync(id);
+            if (!deleteResponse.IsValid && deleteResponse.Result == Nest.Result.NotFound)
+                return ResponseDto<bool>.Fail("Data not found", System.Net.HttpStatusCode.NotFound);
 
-            if (!response)
+            if (!deleteResponse.IsValid)
+            {
+                _logger.LogError(deleteResponse.OriginalException, deleteResponse.ServerError.ToString());
                 return ResponseDto<bool>.Fail("An error occurred while deleting data", System.Net.HttpStatusCode.NotFound);
+            }
 
-            return ResponseDto<bool>.Success(response, System.Net.HttpStatusCode.OK);
+            return ResponseDto<bool>.Success(deleteResponse.IsValid, System.Net.HttpStatusCode.OK);
         }
     }
 }
