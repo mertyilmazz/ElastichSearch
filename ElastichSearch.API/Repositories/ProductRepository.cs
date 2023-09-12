@@ -22,7 +22,7 @@ namespace ElastichSearch.API.Repositories
 
             var response = await _elastichClient.IndexAsync(newProduct, x => x.Index(indexName).Id(Guid.NewGuid().ToString()));
 
-            if (!response.IsSuccess()) return null;
+            if (!response.IsValidResponse) return null;
 
             newProduct.Id = response.Id;
 
@@ -58,7 +58,7 @@ namespace ElastichSearch.API.Repositories
             //    x => x.Index(indexName).Doc(productUpdateDto));
 
             var response = await _elastichClient.UpdateAsync<Product, ProductUpdateDto>(indexName, productUpdateDto.id, x => x.Doc(productUpdateDto));
-            return response.IsSuccess();
+            return response.IsValidResponse;
         }
 
 

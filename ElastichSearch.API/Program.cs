@@ -2,6 +2,8 @@
 using ElastichSearch.API.Extensions;
 using ElastichSearch.API.Repositories;
 using ElastichSearch.API.Services;
+using ElasticSearch.API.Repositories;
+using ElasticSearch.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddElasticClient(builder.Configuration);
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<ECommerceService>();
 builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<ECommerceRepository>();
 var app = builder.Build();
 
 
