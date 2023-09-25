@@ -25,6 +25,8 @@ namespace ElasticSearch.API.Models.ECommercoModel
         [JsonPropertyName("products")]
         public Product[] Products { get; set; }
 
+        [JsonPropertyName("taxful_total_price")]
+        public double TaxFullTotalPrice { get; set; }
 
     }
 
@@ -34,7 +36,6 @@ namespace ElasticSearch.API.Models.ECommercoModel
         public long ProductId { get; set; }
         [JsonPropertyName("product_name")]
         public string ProductName { get; set; } = null!;
-
 
     }
 }

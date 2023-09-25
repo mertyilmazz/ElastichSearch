@@ -23,5 +23,26 @@ namespace ElasticSearch.API.Controllers
             var result = await _eCommerceService.TermQueryByCustomerFullName(customerName);
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> TermsQuery([FromBody] List<string> customerFirstNameList)
+        {
+            var result = await _eCommerceService.TermsQueryByCustomerFullName(customerFirstNameList);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PrefixQuery(string customerFullName)
+        {
+            var result = await _eCommerceService.PrefixQuery(customerFullName);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RangeQuery(double fromPrice, double toPrice)
+        {
+            var result = await _eCommerceService.RangeQuery(fromPrice, toPrice);
+            return Ok(result);
+        }
     }
 }
